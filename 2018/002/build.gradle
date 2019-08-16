@@ -1,0 +1,18 @@
+apply plugin : 'c'
+
+model {
+    components {
+        main(NativeExecutableSpec)
+    }
+    toolChains {
+        clang(Clang) {
+            target("unix_x86")
+        }
+    }
+    binaries {
+        all {
+            cCompiler.args "-Wall", "-Werror", "-Wpedantic", "-I/usr/local/include/apr-1"
+	    linker.args "-L/usr/local/lib", "-lapr-1"
+        }
+    }
+}
