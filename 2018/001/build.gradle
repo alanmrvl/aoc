@@ -1,0 +1,14 @@
+apply plugin : 'c'
+
+model {
+    components {
+        main(NativeExecutableSpec)
+    }
+    toolChains {
+        clang(Clang) {
+            target("unix_x86") {
+                cppCompiler.executable = "/usr/bin/cc"
+            }
+        }
+    }
+}
