@@ -38,18 +38,39 @@ main(int argc, char **argv)
 		exit(1);
 	}
 
-	long total = 0;
+	long current_freq = 0;
+	long current_iter = 0;
+	long frequencies[1000000] = {0}; //TODO: use hashtable that doesn't need pointers for key
+
+	apr_hash_set(freq_visited, frequencies + current_iter, sizeof(long), frequencies + current_iter);
 
 	long next;
-	while (fscanf(file, "%ld", &next) != EOF) {
-		total += next;	
+	while (1) {
+		while (fscanf(file, "%ld", &next) != EOF) {
+			current_freq += next;
+			frequencies[current_iter] = current_freq;
+
+			printf("%ld Frequency: %ld\n", current_iter, current_freq);
+
+			long *found = apr_hash_get(freq_visited, frequencies + current_iter, sizeof(long));
+			
+			if (found != NULL) {
+				printf("First repeated frequency: %ld\n", current_freq);
+				printf("Value: %ld\n", *found);
+
+				apr_pool_destroy(pool);
+				fclose(file);
+
+				exit(0);
+			}
+
+			apr_hash_set(freq_visited, frequencies + current_iter, sizeof(long), frequencies + current_iter);
+			current_iter++;
+		}
+
+		printf("EOF\n");
+		fseek(file, 0, SEEK_SET);
 	}
-
-	printf("Total: %ld\n", total);
-
-	apr_pool_destroy(pool);
-
-	fclose(file);
 
 	return (0);
 }
