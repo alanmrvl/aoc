@@ -24,6 +24,20 @@ main(int argc, char **argv)
 		exit(1);
 	}
 
+	apr_pool_t *pool;
+	
+	if (apr_pool_create_core(&pool)) {
+		fprintf(stderr, "Failed to allocate pool.\n");
+		exit(1);
+	}
+
+	apr_hash_t *freq_visited = apr_hash_make(pool);
+
+	if (freq_visited == NULL) {
+		fprintf(stderr, "Failed to allocate hashtable\n");
+		exit(1);
+	}
+
 	long total = 0;
 
 	long next;
@@ -32,6 +46,8 @@ main(int argc, char **argv)
 	}
 
 	printf("Total: %ld\n", total);
+
+	apr_pool_destroy(pool);
 
 	fclose(file);
 
