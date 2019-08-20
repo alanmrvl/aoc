@@ -1,0 +1,17 @@
+apply plugin : 'c'
+
+model {
+    components {
+        main(NativeExecutableSpec)
+    }
+    toolChains {
+        clang(Clang) {
+            target("unix_x86")
+        }
+    }
+    binaries {
+        all {
+            cCompiler.args "-Werror", "-Wall", "-Wpedantic"
+        }
+    }
+}
