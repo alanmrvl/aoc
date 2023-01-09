@@ -1,13 +1,13 @@
-use std::path::Path;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
+use std::path::Path;
 use std::str::Split;
 
 fn main() {
     let path = Path::new("input");
     let file = File::open(path).unwrap();
     let lines = BufReader::new(file).lines();
-    
+
     let mut score = 0;
 
     for line_result in lines {
@@ -15,9 +15,7 @@ fn main() {
         let assignments: Split<&str> = line.split(",");
 
         let assignment_ranges: Vec<Vec<i32>> = assignments
-            .map(|x| x.split("-")
-                .map(|y| y.parse::<i32>().unwrap())
-                .collect())
+            .map(|x| x.split("-").map(|y| y.parse::<i32>().unwrap()).collect())
             .collect();
 
         let elf1 = &assignment_ranges[0];
