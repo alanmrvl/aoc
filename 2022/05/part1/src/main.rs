@@ -14,17 +14,17 @@ fn main() {
         vec!['T', 'R', 'Q', 'N', 'C'],
         vec!['G', 'V', 'R'],
         vec!['C', 'Z', 'S', 'P', 'D', 'L', 'R'],
-        vec!['D', 'S', 'J', 'V', 'G', 'P', 'B', 'F']
+        vec!['D', 'S', 'J', 'V', 'G', 'P', 'B', 'F'],
     ];
 
     for line in lines {
         let line = line.unwrap();
-        
+
         let words: Vec<&str> = line.split(" ").collect();
 
         let mut move_count = words[1].parse::<u32>().unwrap();
         let from_loc: usize = words[3].parse::<usize>().unwrap() - 1;
-        let to_loc:usize = words[5].parse::<usize>().unwrap() - 1;
+        let to_loc: usize = words[5].parse::<usize>().unwrap() - 1;
 
         while move_count > 0 {
             let item = pos[from_loc].pop().unwrap();
@@ -34,7 +34,7 @@ fn main() {
     }
 
     let mut last_pos: Vec<char> = vec![];
-    
+
     for p in pos {
         if let Some(last) = p.last() {
             last_pos.push(*last);
