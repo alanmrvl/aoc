@@ -1,7 +1,5 @@
 const fs = require('fs');
 
-console.log('yolo');
-
 fs.readFile('input', 'utf8', (err, data) => {
     if (err) {
         console.error(err);
