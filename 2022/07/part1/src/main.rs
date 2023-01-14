@@ -1,11 +1,13 @@
+use std::fs::File;
+use std::io::{BufRead, BufReader};
 use std::str::FromStr;
 
 #[derive(Debug)]
 enum LogItem {
-        CmdChangeDirectory(String),
-        CmdListDirectory,
-        Directory(String),
-        File(String, u32),
+    CmdChangeDirectory(String),
+    CmdListDirectory,
+    Directory(String),
+    File(String, u32),
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -28,16 +30,52 @@ impl FromStr for LogItem {
         } else if let Ok(num) = parts[0].parse::<u32>() {
             Ok(LogItem::File(parts[1].to_string(), num))
         } else {
-            Err(ParseLogItemError { line: s.to_string() })            
+            Err(ParseLogItemError {
+                line: s.to_string(),
+            })
         };
     }
 }
 
 fn main() {
-    let lines = std::fs::read_to_string("input").unwrap();
+    let file = File::open("input").unwrap();
+    let lines = BufReader::new(file).lines();
 
-    for line in lines.lines() {
+    let max = 100_000;
+    let mut total = 0;
+
+    let mut dir: Vec<u32> = vec![0];
+
+    for line in lines.skip(1) {
+        let line = line.unwrap();
         let log_item = line.parse::<LogItem>().unwrap();
-        dbg!(log_item);
+
+        match log_item {
+            LogItem::CmdChangeDirectory(dir_name) => {
+                if dir_name == ".." {
+                    // Since apparently this is just DFS, we can append all the results
+                    // to the parent when we go back up a directory, as we will never need
+                    // to go to this directory again.
+                    let curr = dir.pop().unwrap();
+                    let parent = dir.last_mut().unwrap();
+                    *parent += curr;
+
+                    if curr < max {
+                        total += curr;
+                    }
+                } else {
+                    // We're going _down into_ directories exactly once (because DFS),
+                    // so we can just assume all we need to do is create a new zeroed
+                    // count for the directory.
+                    dir.push(0);
+                }
+            }
+            LogItem::File(_, size) => {
+                let curr = dir.last_mut().unwrap();
+                *curr += size;
+            }
+            _ => {}
+        }
     }
+    println!("total {}", total);
 }
