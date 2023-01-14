@@ -77,5 +77,19 @@ fn main() {
             _ => {}
         }
     }
+
+    // cleanup remaining directories
+    while !dir.is_empty() {
+        let last = dir.pop().unwrap();
+
+        if last < max {
+            total += last;
+        }
+
+        if let Some(parent) = dir.last_mut() {
+            *parent += last;
+        }
+    }
+
     println!("total {}", total);
 }
