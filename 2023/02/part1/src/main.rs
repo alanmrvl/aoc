@@ -29,28 +29,27 @@ impl FromStr for Game {
 
         let game_id = header.parse::<usize>().map_err(|_| ParseGameError)?;
 
-        let rounds: Vec<Round> = body.split(';')
+        let rounds: Vec<Round> = body
+            .split(';')
             .map(|s| s.trim())
             .map(|s| {
                 let mut red = 0;
                 let mut green = 0;
                 let mut blue = 0;
 
-                s.split(',')
-                    .map(|s| s.trim())
-                    .for_each(|c| {
-                        let (count, color) = c.split_once(' ').unwrap();
+                s.split(',').map(|s| s.trim()).for_each(|c| {
+                    let (count, color) = c.split_once(' ').unwrap();
 
-                        let color = color.trim();
-                        let count = count.trim().parse::<usize>().unwrap();
+                    let color = color.trim();
+                    let count = count.trim().parse::<usize>().unwrap();
 
-                        match color {
-                            "red" => red += count,
-                            "green" => green += count,
-                            "blue" => blue += count,
-                            _ => panic!(),
-                        }
-                    });
+                    match color {
+                        "red" => red += count,
+                        "green" => green += count,
+                        "blue" => blue += count,
+                        _ => panic!(),
+                    }
+                });
 
                 return Round {
                     red: red,
@@ -73,7 +72,11 @@ fn main() {
     let res: usize = INPUT
         .lines()
         .map(|s| s.parse::<Game>().unwrap())
-        .filter(|game| game.rounds.iter().all(|round| round.red <= 12 && round.green <= 13 && round.blue <= 14)) 
+        .filter(|game| {
+            game.rounds
+                .iter()
+                .all(|round| round.red <= 12 && round.green <= 13 && round.blue <= 14)
+        })
         .map(|game| game.id)
         .sum();
 
