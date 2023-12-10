@@ -78,13 +78,10 @@ fn main() {
     for i in 0..card_matches.len() {
         let (match_count, copy_count) = card_matches[i];
 
-        // for each copy
-        for _ in 0..copy_count {
-            // add copies equal to the number of matches
-            for k in 0..cmp::min(match_count, card_matches.len() - i) {
-                let idx = i + k + 1;
-                card_matches[idx].1 += 1;
-            }
+        // add copies equal to the number of matches
+        for k in 0..cmp::min(match_count, card_matches.len() - i) {
+            let idx = i + k + 1;
+            card_matches[idx].1 += copy_count;
         }
     }
 
